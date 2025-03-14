@@ -13,7 +13,8 @@
 				"GameplayAbilities",
 				"CoreUObject",
 				"ModularGameplay",
-				"UMG"
+				"UMG",
+				"Blutility"
 			]
 		}
 	],

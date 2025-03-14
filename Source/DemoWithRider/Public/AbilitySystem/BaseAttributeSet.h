@@ -39,46 +39,64 @@ public:
 	 *	Damage
 	 *	Heal
 	 */
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="BaseAttributeSet")
+	// AttributeSet Overrides
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="BaseAttributeSet", ReplicatedUsing = OnRep_HP)
 	FGameplayAttributeData HP;
 	ATTRIBUTE_ACCESSORS(UBaseAttributeSet, HP);
 	
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="BaseAttributeSet")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="BaseAttributeSet", ReplicatedUsing = OnRep_MaxHP)
 	FGameplayAttributeData MaxHP;
 	ATTRIBUTE_ACCESSORS(UBaseAttributeSet, MaxHP);
 	
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="BaseAttributeSet")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="BaseAttributeSet", ReplicatedUsing = OnRep_MP)
 	FGameplayAttributeData MP;
 	ATTRIBUTE_ACCESSORS(UBaseAttributeSet, MP);
 	
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="BaseAttributeSet")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="BaseAttributeSet", ReplicatedUsing = OnRep_MaxMP)
 	FGameplayAttributeData MaxMP;
 	ATTRIBUTE_ACCESSORS(UBaseAttributeSet, MaxMP);
 	
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="BaseAttributeSet")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="BaseAttributeSet", ReplicatedUsing = OnRep_SP)
 	FGameplayAttributeData SP;
 	ATTRIBUTE_ACCESSORS(UBaseAttributeSet, SP);
 	
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="BaseAttributeSet")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="BaseAttributeSet", ReplicatedUsing = OnRep_MaxSP)
 	FGameplayAttributeData MaxSP;
 	ATTRIBUTE_ACCESSORS(UBaseAttributeSet, MaxSP);
-/*protected:
-	/*Replication Notificaion Functions for Attributes#1#
+
+	UPROPERTY(BlueprintReadWrite,Category="Damage")
+	FGameplayAttributeData Damage;
+	ATTRIBUTE_ACCESSORS(UBaseAttributeSet, Damage);
+	
+protected:
+
+	// Helper function to proportionally adjust the value of an attribute when it's associated max attribute changes.
+	// (i.e. When MaxHealth increases, Health increases by an amount that maintains the same percentage as before)
+	void AdjustAttributeForMaxChange(FGameplayAttributeData& AffectedAttribute, const FGameplayAttributeData& MaxAttribute, float NewMaxValue, const FGameplayAttribute& AffectedAttributeProperty);
+	
+	/*Replication Notificaion Functions for Attributes*/
 	UFUNCTION()
-	virtual void OnRep_HP(const FGameplayAttribute& Old_HP);
+	virtual void OnRep_HP(const FGameplayAttributeData& Old_HP);
 	
 	UFUNCTION()
-	virtual void OnRep_MaxHP(const FGameplayAttribute& Old_MaxHP);
+	virtual void OnRep_MaxHP(const FGameplayAttributeData& Old_MaxHP);
 	
 	UFUNCTION()
-	virtual void OnRep_MP(const FGameplayAttribute& Old_MP);
+	virtual void OnRep_MP(const FGameplayAttributeData& Old_MP);
 	
 	UFUNCTION()
-	virtual void OnRep_MaxMP(const FGameplayAttribute& Old_MaxMP);
+	virtual void OnRep_MaxMP(const FGameplayAttributeData& Old_MaxMP);
 	
 	UFUNCTION()
-	virtual void OnRep_SP(const FGameplayAttribute& Old_SP);
+	virtual void OnRep_SP(const FGameplayAttributeData& Old_SP);
 	
 	UFUNCTION()
-	virtual void OnRep_MaxSP(const FGameplayAttribute& Old_MaxSP);*/
+	virtual void OnRep_MaxSP(const FGameplayAttributeData& Old_MaxSP);
 };
+
